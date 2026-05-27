@@ -1,0 +1,737 @@
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+      }
+      .kanban-column {
+        min-width: 280px;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #ccc3d7;
+        border-radius: 10px;
+      }
+      .task-card {
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(83, 0, 183, 0.08);
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-background overflow-hidden h-screen flex">
+    <!-- SideNavBar Anchor -->
+    <aside
+      class="hidden md:flex flex-col pt-md pb-xl gap-xs h-full bg-surface-container-low border-r border-outline-variant w-[280px] shrink-0"
+    >
+      <div class="px-gutter mb-xl">
+        <h1 class="font-headline-md text-headline-md font-bold text-primary">
+          Riwiflow
+        </h1>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Product Team
+        </p>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="flex items-center bg-primary-fixed text-on-primary-fixed-variant rounded-lg mx-2 px-4 py-3 font-body-sm text-body-sm transition-all scale-[0.98]"
+          href="/board"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="dashboard"
+            >dashboard</span
+          >
+          <span>Dashboard</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="assignment"
+            >assignment</span
+          >
+          <span>Projects</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="group"
+            >group</span
+          >
+          <span>Team</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="bar_chart"
+            >bar_chart</span
+          >
+          <span>Reports</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="settings"
+            >settings</span
+          >
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="px-4 mt-auto space-y-2">
+        <button
+          id="create-task-btn"
+          class="w-full bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity"
+        >
+          <span class="material-symbols-outlined" data-icon="add">add</span>
+          New Task
+        </button>
+        <button
+          id="logout-btn"
+          class="w-full bg-surface border border-outline-variant text-on-surface hover:bg-surface-container-low py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-sm transition-colors"
+        >
+          <span class="material-symbols-outlined" data-icon="logout">logout</span>
+          Logout
+        </button>
+      </div>
+    </aside>
+    <main class="flex-1 flex flex-col min-w-0">
+      <!-- TopAppBar Anchor -->
+      <header
+        class="flex justify-between items-center h-16 px-gutter w-full bg-surface border-b border-outline-variant z-40"
+      >
+        <div class="flex items-center gap-4 flex-1">
+          <div class="relative max-w-md w-full">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+              data-icon="search"
+              >search</span
+            >
+            <input
+              id="search-input"
+              class="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-full font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+              placeholder="Search tasks..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-4 ml-4">
+          <div class="hidden sm:flex flex-col text-right">
+            <span class="font-label-md text-label-md text-on-surface font-semibold" id="header-user-name">User Name</span>
+            <span class="font-label-sm text-[11px] text-primary font-bold uppercase tracking-wider" id="header-user-role">Role</span>
+          </div>
+          <button
+            class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors"
+            data-icon="notifications"
+          >
+            notifications
+          </button>
+          <img
+            id="header-user-avatar"
+            alt="User profile"
+            class="w-8 h-8 rounded-full border border-outline-variant object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2-sF_Qd9jEF33fUrS3vMvdoA8rbw2_a6jzv7r_6oDikCkrertidHwLgqAtWuKvLnRx7Lcsi79ZYj4FBaL_pETFxeyeF27_PhXy-KnuioiYgCwYTKcWDEuZoRksSf8Jb0_ZmsxJkpTFGZ2bW8aTl5fhcA4DOHQQal_vu1KVBcizoM56dHRc7Ce_vkUul2aL96DSeDmqR4YdfGUuoIQkUF_F8AX45U05tmCFg7YyPH6xtgAx7e31u5_5e2rQxm_tgBEgnhV-LsqsEDH"
+          />
+        </div>
+      </header>
+      <!-- Content Area -->
+      <div class="flex-1 overflow-x-auto p-gutter custom-scrollbar">
+        <div class="flex gap-gutter h-full">
+          <!-- Column: To Do -->
+          <div class="kanban-column flex flex-col w-1/4 h-full">
+            <div class="flex items-center justify-between mb-md">
+              <div class="flex items-center gap-2">
+                <h3 class="font-title-sm text-title-sm text-on-surface font-semibold">
+                  To Do
+                </h3>
+                <span
+                  id="count-todo"
+                  class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm"
+                  >0</span
+                >
+              </div>
+              <button
+                class="material-symbols-outlined text-outline"
+                data-icon="more_horiz"
+              >
+                more_horiz
+              </button>
+            </div>
+            <div
+              id="column-todo"
+              class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"
+            >
+              <!-- Dynamic Cards -->
+            </div>
+          </div>
+          <!-- Column: In Progress -->
+          <div class="kanban-column flex flex-col w-1/4 h-full">
+            <div class="flex items-center justify-between mb-md">
+              <div class="flex items-center gap-2">
+                <h3 class="font-title-sm text-title-sm text-on-surface font-semibold">
+                  In Progress
+                </h3>
+                <span
+                  id="count-in-progress"
+                  class="bg-primary-container text-on-primary px-2 py-0.5 rounded-full font-label-sm text-label-sm"
+                  >0</span
+                >
+              </div>
+              <button
+                class="material-symbols-outlined text-outline"
+                data-icon="more_horiz"
+              >
+                more_horiz
+              </button>
+            </div>
+            <div
+              id="column-in-progress"
+              class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"
+            >
+              <!-- Dynamic Cards -->
+            </div>
+          </div>
+          <!-- Column: In Review -->
+          <div class="kanban-column flex flex-col w-1/4 h-full">
+            <div class="flex items-center justify-between mb-md">
+              <div class="flex items-center gap-2">
+                <h3 class="font-title-sm text-title-sm text-on-surface font-semibold">
+                  In Review
+                </h3>
+                <span
+                  id="count-in-review"
+                  class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm"
+                  >0</span
+                >
+              </div>
+              <button
+                class="material-symbols-outlined text-outline"
+                data-icon="more_horiz"
+              >
+                more_horiz
+              </button>
+            </div>
+            <div
+              id="column-in-review"
+              class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"
+            >
+              <!-- Dynamic Cards -->
+            </div>
+          </div>
+          <!-- Column: Done -->
+          <div class="kanban-column flex flex-col w-1/4 h-full">
+            <div class="flex items-center justify-between mb-md">
+              <div class="flex items-center gap-2">
+                <h3 class="font-title-sm text-title-sm text-on-surface font-semibold">
+                  Done
+                </h3>
+                <span
+                  id="count-done"
+                  class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm"
+                  >0</span
+                >
+              </div>
+              <button
+                class="material-symbols-outlined text-outline"
+                data-icon="more_horiz"
+              >
+                more_horiz
+              </button>
+            </div>
+            <div
+              id="column-done"
+              class="flex-1 space-y-md p-2 bg-surface-container-low/50 rounded-xl overflow-y-auto custom-scrollbar"
+            >
+              <!-- Dynamic Cards -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal for Create / Edit Task -->
+    <div id="task-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center px-6 py-4 border-b border-outline-variant bg-surface-container-low">
+          <h3 id="modal-title" class="font-headline-md text-title-sm text-on-surface font-semibold">Create New Task</h3>
+          <button id="modal-close-btn" class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container p-1 rounded-full transition-colors">close</button>
+        </div>
+        <!-- Modal Body -->
+        <form id="task-form" class="flex-1 overflow-y-auto p-6 space-y-4">
+          <input type="hidden" id="task-id">
+          <!-- Title -->
+          <div class="space-y-1">
+            <label for="task-title-input" class="block font-label-md text-label-sm text-on-surface font-medium">Title</label>
+            <input type="text" id="task-title-input" required class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="e.g. User Flow Mapping">
+          </div>
+          <!-- Description -->
+          <div class="space-y-1">
+            <label for="task-desc-input" class="block font-label-md text-label-sm text-on-surface font-medium">Description</label>
+            <textarea id="task-desc-input" required rows="3" class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Describe the task details..."></textarea>
+          </div>
+          <!-- Status -->
+          <div class="space-y-1">
+            <label for="task-status-select" class="block font-label-md text-label-sm text-on-surface font-medium">Status</label>
+            <select id="task-status-select" class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+              <option value="todo">To Do</option>
+              <option value="in progress">In Progress</option>
+              <option value="in review">In Review</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <!-- Assigned User -->
+          <div class="space-y-1">
+            <label for="task-user-select" class="block font-label-md text-label-sm text-on-surface font-medium">Assign To</label>
+            <select id="task-user-select" class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <!-- Actions -->
+          <div class="flex items-center justify-between pt-4 border-t border-outline-variant">
+            <!-- Delete Button (Only for Admin & existing task) -->
+            <button type="button" id="task-delete-btn" class="bg-error text-on-error hover:bg-red-700 font-label-md text-label-sm py-2 px-4 rounded-lg transition-colors flex items-center gap-1 hidden">
+              <span class="material-symbols-outlined text-sm">delete</span>
+              Delete Task
+            </button>
+            <div class="flex items-center gap-2 ml-auto">
+              <button type="button" id="modal-cancel-btn" class="border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-sm py-2 px-4 rounded-lg transition-colors">Cancel</button>
+              <button type="submit" id="modal-save-btn" class="bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-sm py-2 px-4 rounded-lg transition-colors">Save Task</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        // 1. Session check & headers
+        const loggedUser = JSON.parse(localStorage.getItem('user'));
+        if (!loggedUser) {
+          window.navigateTo('/login');
+          return;
+        }
+
+        document.getElementById('header-user-name').innerText = loggedUser.name;
+        document.getElementById('header-user-role').innerText = loggedUser.role;
+
+        // Hide "New Task" button for coders
+        const createBtn = document.getElementById('create-task-btn');
+        if (loggedUser.role !== 'admin') {
+          createBtn.style.display = 'none';
+        }
+
+        // Logout handler
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          localStorage.removeItem('user');
+          window.navigateTo('/login');
+        });
+
+        // 2. Fetch users and tasks
+        let allUsers = [];
+        let allTasks = [];
+        let searchQuery = "";
+
+        async function initBoard() {
+          await fetchUsers();
+          await fetchTasks();
+          setupEventListeners();
+        }
+
+        async function fetchUsers() {
+          try {
+            const res = await fetch('http://localhost:3000/users');
+            if (res.ok) {
+              allUsers = await res.json();
+              const select = document.getElementById('task-user-select');
+              select.innerHTML = allUsers.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join('');
+            }
+          } catch (e) {
+            console.error("Error fetching users:", e);
+            throw e;
+          }
+        }
+
+        async function fetchTasks() {
+          try {
+            const res = await fetch('http://localhost:3000/tasks');
+            if (res.ok) {
+              allTasks = await res.json();
+              renderBoard();
+            }
+          } catch (e) {
+            console.error("Error fetching tasks:", e);
+            throw e;
+          }
+        }
+
+        // 3. Render Kanban Board
+        function renderBoard() {
+          const columns = {
+            'todo': document.getElementById('column-todo'),
+            'in progress': document.getElementById('column-in-progress'),
+            'in review': document.getElementById('column-in-review'),
+            'done': document.getElementById('column-done')
+          };
+
+          const counts = {
+            'todo': document.getElementById('count-todo'),
+            'in progress': document.getElementById('count-in-progress'),
+            'in review': document.getElementById('count-in-review'),
+            'done': document.getElementById('count-done')
+          };
+
+          // Clear previous cards
+          Object.values(columns).forEach(col => col.innerHTML = '');
+          
+          // Counters
+          const columnCounts = { 'todo': 0, 'in progress': 0, 'in review': 0, 'done': 0 };
+
+          // Filter by search query
+          const filteredTasks = allTasks.filter(t => {
+            if (!searchQuery) return true;
+            const query = searchQuery.toLowerCase();
+            const titleStr = (t.title || '').toLowerCase();
+            const descStr = (t.description || '').toLowerCase();
+            return titleStr.includes(query) || descStr.includes(query);
+          });
+
+          filteredTasks.forEach(task => {
+            const status = task.status || 'todo';
+            const colEl = columns[status];
+            if (!colEl) return;
+
+            columnCounts[status]++;
+
+            // Find assigned user
+            const assignedUser = allUsers.find(u => String(u.id) === String(task.userId)) || { name: 'Unassigned', role: 'coder' };
+            const userName = assignedUser.name || 'Unassigned';
+            const initials = userName.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            // Determine badges/categories dynamically (mocking category based on title/user role)
+            let category = "Task";
+            let categoryClass = "bg-secondary-container text-secondary";
+            if (assignedUser.role === 'admin') {
+              category = "Ops";
+              categoryClass = "bg-secondary-container text-secondary";
+            } else {
+              const taskTitle = task.title || '';
+              const hash = taskTitle.length % 3;
+              if (hash === 0) {
+                category = "Engineering";
+                categoryClass = "bg-primary-fixed text-on-primary-fixed-variant";
+              } else if (hash === 1) {
+                category = "Design";
+                categoryClass = "bg-primary-fixed text-on-primary-fixed-variant";
+              } else {
+                category = "Research";
+                categoryClass = "bg-primary-fixed text-on-primary-fixed-variant";
+              }
+            }
+
+            const isMe = String(task.userId) === String(loggedUser.id);
+            const borderClass = isMe ? "border-l-4 border-l-primary border-outline-variant" : "border-outline-variant";
+
+            const card = document.createElement('div');
+            card.className = `task-card bg-surface border ${borderClass} rounded-xl p-md shadow-sm`;
+            card.innerHTML = `
+              <div class="flex items-start justify-between mb-xs">
+                <span class="${categoryClass} px-2 py-0.5 rounded-full font-label-sm text-label-sm">${category}</span>
+                ${isMe ? `<span class="bg-primary/10 text-primary text-[10px] font-semibold px-2 py-0.5 rounded-full">Assigned to me</span>` : ''}
+              </div>
+              <h4 class="font-label-md text-label-md text-on-surface mb-xs font-semibold">${escapeHTML(task.title)}</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">${escapeHTML(task.description)}</p>
+              <div class="mt-md flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed-variant flex items-center justify-center font-bold text-[10px]" title="${escapeHTML(userName)}">
+                    ${initials}
+                  </div>
+                  <span class="font-body-sm text-[12px] text-on-surface-variant">${escapeHTML(userName)}</span>
+                </div>
+                <span class="font-label-sm text-[11px] text-outline flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">schedule</span>
+                  Active
+                </span>
+              </div>
+            `;
+            
+            // Enable dragging if admin or owner of task
+            const canDrag = loggedUser.role === 'admin' || isMe;
+            if (canDrag) {
+              card.setAttribute('draggable', 'true');
+              card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', task.id);
+                setTimeout(() => card.classList.add('opacity-40'), 0);
+              });
+              card.addEventListener('dragend', () => {
+                card.classList.remove('opacity-40');
+              });
+            }
+
+            card.addEventListener('click', () => openModal(task));
+            colEl.appendChild(card);
+          });
+
+          // Update counts
+          Object.keys(counts).forEach(status => {
+            if (counts[status]) {
+              counts[status].innerText = columnCounts[status];
+            }
+          });
+        }
+
+        // Helper to escape HTML characters
+        function escapeHTML(str) {
+          if (!str) return '';
+          return str.replace(/[&<>'"]/g, 
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+          );
+        }
+
+        // 4. Modal Interactions
+        const modal = document.getElementById('task-modal');
+        const form = document.getElementById('task-form');
+        const modalTitle = document.getElementById('modal-title');
+        const taskIdInput = document.getElementById('task-id');
+        const titleInput = document.getElementById('task-title-input');
+        const descInput = document.getElementById('task-desc-input');
+        const statusSelect = document.getElementById('task-status-select');
+        const userSelect = document.getElementById('task-user-select');
+        const deleteBtn = document.getElementById('task-delete-btn');
+        const saveBtn = document.getElementById('modal-save-btn');
+
+        function openModal(task = null) {
+          form.reset();
+          modal.classList.remove('hidden');
+
+          if (task) {
+            // EDIT MODE
+            taskIdInput.value = task.id;
+            titleInput.value = task.title;
+            descInput.value = task.description;
+            statusSelect.value = task.status || 'todo';
+            userSelect.value = task.userId;
+
+            // Apply Role Rules
+            if (loggedUser.role === 'admin') {
+              modalTitle.innerText = "Edit Task";
+              // Admin can edit everything
+              titleInput.disabled = false;
+              descInput.disabled = false;
+              statusSelect.disabled = false;
+              userSelect.disabled = false;
+              deleteBtn.classList.remove('hidden');
+              saveBtn.classList.remove('hidden');
+            } else {
+              // Coder
+              const isAssignedToMe = String(task.userId) === String(loggedUser.id);
+              if (isAssignedToMe) {
+                modalTitle.innerText = "Edit Assigned Task";
+                // Coder can edit status and description only
+                titleInput.disabled = true;
+                descInput.disabled = false;
+                statusSelect.disabled = false;
+                userSelect.disabled = true;
+                deleteBtn.classList.add('hidden');
+                saveBtn.classList.remove('hidden');
+              } else {
+                modalTitle.innerText = "View Task (Read-Only)";
+                // Coder cannot edit other tasks
+                titleInput.disabled = true;
+                descInput.disabled = true;
+                statusSelect.disabled = true;
+                userSelect.disabled = true;
+                deleteBtn.classList.add('hidden');
+                saveBtn.classList.add('hidden');
+              }
+            }
+          } else {
+            // CREATE MODE (Only admins can reach this due to button hide)
+            modalTitle.innerText = "Create New Task";
+            taskIdInput.value = "";
+            statusSelect.value = "todo"; // default status todo
+            titleInput.disabled = false;
+            descInput.disabled = false;
+            statusSelect.disabled = true; // default todo and disabled as per acceptance criteria: status initial default 'todo'
+            userSelect.disabled = false;
+            deleteBtn.classList.add('hidden');
+            saveBtn.classList.remove('hidden');
+          }
+        }
+
+        function closeModal() {
+          modal.classList.add('hidden');
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+          // Setup column drop zones
+          const columnsConfig = [
+            { id: 'todo', el: document.getElementById('column-todo') },
+            { id: 'in progress', el: document.getElementById('column-in-progress') },
+            { id: 'in review', el: document.getElementById('column-in-review') },
+            { id: 'done', el: document.getElementById('column-done') }
+          ];
+
+          columnsConfig.forEach(({ id: statusName, el }) => {
+            if (!el) return;
+
+            el.addEventListener('dragover', (e) => {
+              e.preventDefault();
+              el.classList.add('bg-primary/5');
+            });
+
+            el.addEventListener('dragleave', () => {
+              el.classList.remove('bg-primary/5');
+            });
+
+            el.addEventListener('drop', async (e) => {
+              e.preventDefault();
+              el.classList.remove('bg-primary/5');
+              
+              const taskId = e.dataTransfer.getData('text/plain');
+              if (!taskId) return;
+
+              const task = allTasks.find(t => String(t.id) === String(taskId));
+              if (!task) return;
+
+              const canEdit = loggedUser.role === 'admin' || String(task.userId) === String(loggedUser.id);
+              if (!canEdit) {
+                alert("You do not have permission to move this task.");
+                return;
+              }
+
+              if (task.status === statusName) return;
+
+              try {
+                const res = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ status: statusName })
+                });
+
+                if (res.ok) {
+                  task.status = statusName;
+                  renderBoard();
+                } else {
+                  alert("Failed to update status on server.");
+                }
+              } catch (err) {
+                console.error("Error patching drag status:", err);
+                alert("Network error. Could not save status change.");
+              }
+            });
+          });
+
+          createBtn.addEventListener('click', () => openModal(null));
+          document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+          document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+
+          // Close modal clicking outside the container
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+          });
+
+          // Search filtering
+          document.getElementById('search-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderBoard();
+          });
+
+          // Handle form submit (save task)
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const taskId = taskIdInput.value;
+            
+            const taskData = {
+              title: titleInput.value.trim(),
+              description: descInput.value.trim(),
+              status: statusSelect.value,
+              userId: userSelect.value
+            };
+
+            try {
+              let url = 'http://localhost:3000/tasks';
+              let method = 'POST';
+
+              if (taskId) {
+                // Edit mode
+                url = `http://localhost:3000/tasks/${taskId}`;
+                method = 'PATCH';
+                
+                // For coder, keep original fields unmodified on server
+                if (loggedUser.role !== 'admin') {
+                  delete taskData.title;
+                  delete taskData.userId;
+                }
+              } else {
+                // Create mode - ensure status is todo
+                taskData.status = 'todo';
+              }
+
+              const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskData)
+              });
+
+              if (res.ok) {
+                closeModal();
+                await fetchTasks();
+              } else {
+                alert("Failed to save the task.");
+              }
+            } catch (err) {
+              console.error("Error saving task:", err);
+              alert("Network error. Could not connect to API server.");
+            }
+          });
+
+          // Handle Delete
+          deleteBtn.addEventListener('click', async () => {
+            const taskId = taskIdInput.value;
+            if (!taskId) return;
+
+            if (confirm("Are you sure you want to delete this task?")) {
+              try {
+                const res = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+                  method: 'DELETE'
+                });
+
+                if (res.ok) {
+                  closeModal();
+                  await fetchTasks();
+                } else {
+                  alert("Failed to delete the task.");
+                }
+              } catch (err) {
+                console.error("Error deleting task:", err);
+                alert("Network error. Could not connect to API server.");
+              }
+            }
+          });
+        }
+
+        // Initialize board
+        initBoard();
+      })();
+    </script>
+  </body>
+</html>

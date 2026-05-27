@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin User",
+      "email": "admin@riwiflow.com",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Coder User",
+      "email": "coder@riwiflow.com",
+      "password": "coder123",
+      "role": "coder"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "User Flow Mapping",
+      "description": "Define the end-to-end journey for the new onboarding experience.",
+      "status": "done",
+      "userId": "2"
+    },
+    {
+      "id": "2",
+      "title": "API Documentation",
+      "description": "dd",
+      "status": "in progress",
+      "userId": "2"
+    },
+    {
+      "id": "3",
+      "title": "Pricing Tier Update",
+      "description": "Final sign-off required for the Enterprise plan structural changes.",
+      "status": "in review",
+      "userId": "1"
+    },
+    {
+      "id": "4",
+      "title": "Workspace Setup",
+      "description": "Configured the new Riwiflow cloud environment for the dev team.",
+      "status": "todo",
+      "userId": "2"
+    },
+    {
+      "title": "Prueba 1",
+      "description": "asdasd",
+      "status": "done",
+      "userId": "1",
+      "id": "FbUTo-YUZmA"
+    }
+  ],
+  "logs": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
