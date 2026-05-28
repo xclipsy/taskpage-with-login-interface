@@ -94,6 +94,16 @@
           >
           <span>Settings</span>
         </a>
+        <a
+          id="admin-nav-link"
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="/admin"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="admin_panel_settings"
+            >admin_panel_settings</span
+          >
+          <span>Manage Users</span>
+        </a>
       </nav>
       <div class="px-4 mt-auto space-y-2">
         <button
@@ -332,10 +342,12 @@
         document.getElementById('header-user-name').innerText = loggedUser.name;
         document.getElementById('header-user-role').innerText = loggedUser.role;
 
-        // Hide "New Task" button for coders
+        // Hide "New Task" button and "Manage Users" nav link for coders
         const createBtn = document.getElementById('create-task-btn');
+        const adminNavLink = document.getElementById('admin-nav-link');
         if (loggedUser.role !== 'admin') {
-          createBtn.style.display = 'none';
+          if (createBtn) createBtn.style.display = 'none';
+          if (adminNavLink) adminNavLink.style.display = 'none';
         }
 
         // Logout handler

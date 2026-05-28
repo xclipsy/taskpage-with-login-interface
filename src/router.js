@@ -4,7 +4,8 @@ const routes = {
   '/': '/src/pages/login.html',
   '/index.html': '/src/pages/login.html',
   '/login': '/src/pages/login.html',
-  '/board': '/src/pages/board.html'
+  '/board': '/src/pages/board.html',
+  '/admin': '/src/pages/admin.html'
 };
 
 async function loadPage(path) {
@@ -25,13 +26,18 @@ async function loadPage(path) {
   }
 
   // Route Guards:
-  // If not logged in and target is a protected route (like /board), redirect to login
-  if (!user && targetPath === '/board') {
+  // If not logged in and target is a protected route (like /board or /admin), redirect to login
+  if (!user && (targetPath === '/board' || targetPath === '/admin')) {
     window.history.replaceState({}, '', '/login');
     targetPath = '/login';
   }
   // If logged in and target is auth route (like /login or /), redirect to board
   else if (user && (targetPath === '/' || targetPath === '/login' || targetPath === '/index.html')) {
+    window.history.replaceState({}, '', '/board');
+    targetPath = '/board';
+  }
+  // If logged in but not an admin, redirect admin route attempts to board
+  else if (user && targetPath === '/admin' && user.role !== 'admin') {
     window.history.replaceState({}, '', '/board');
     targetPath = '/board';
   }

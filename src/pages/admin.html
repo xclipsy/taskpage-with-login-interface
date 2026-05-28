@@ -1,0 +1,582 @@
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #ccc3d7;
+        border-radius: 10px;
+      }
+      .action-btn {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+      .action-btn:hover {
+        transform: translateY(-1px);
+      }
+      .action-btn:active {
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-background overflow-hidden h-screen flex">
+    <!-- SideNavBar Anchor -->
+    <aside
+      class="hidden md:flex flex-col pt-md pb-xl gap-xs h-full bg-surface-container-low border-r border-outline-variant w-[280px] shrink-0"
+    >
+      <div class="px-gutter mb-xl">
+        <h1 class="font-headline-md text-headline-md font-bold text-primary">
+          Riwiflow
+        </h1>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Admin Console
+        </p>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="/board"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="dashboard"
+            >dashboard</span
+          >
+          <span>Dashboard</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="assignment"
+            >assignment</span
+          >
+          <span>Projects</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="group"
+            >group</span
+          >
+          <span>Team</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="bar_chart"
+            >bar_chart</span
+          >
+          <span>Reports</span>
+        </a>
+        <a
+          class="flex items-center text-secondary hover:text-primary hover:bg-primary-container/10 px-4 py-3 mx-2 font-body-sm text-body-sm rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="settings"
+            >settings</span
+          >
+          <span>Settings</span>
+        </a>
+        <!-- Manage Users Link (Active) -->
+        <a
+          id="admin-nav-link"
+          class="flex items-center bg-primary-fixed text-on-primary-fixed-variant rounded-lg mx-2 px-4 py-3 font-body-sm text-body-sm transition-all scale-[0.98]"
+          href="/admin"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="admin_panel_settings"
+            >admin_panel_settings</span
+          >
+          <span>Manage Users</span>
+        </a>
+      </nav>
+      <div class="px-4 mt-auto space-y-2">
+        <button
+          id="create-user-sidebar-btn"
+          class="w-full bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity"
+        >
+          <span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+          New User
+        </button>
+        <button
+          id="logout-btn"
+          class="w-full bg-surface border border-outline-variant text-on-surface hover:bg-surface-container-low py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-sm transition-colors"
+        >
+          <span class="material-symbols-outlined" data-icon="logout">logout</span>
+          Logout
+        </button>
+      </div>
+    </aside>
+    <main class="flex-1 flex flex-col min-w-0">
+      <!-- TopAppBar Anchor -->
+      <header
+        class="flex justify-between items-center h-16 px-gutter w-full bg-surface border-b border-outline-variant z-40"
+      >
+        <div class="flex items-center gap-4 flex-1">
+          <div class="relative max-w-md w-full">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+              data-icon="search"
+              >search</span
+            >
+            <input
+              id="search-input"
+              class="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-full font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+              placeholder="Search users by name or email..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-4 ml-4">
+          <div class="hidden sm:flex flex-col text-right">
+            <span class="font-label-md text-label-md text-on-surface font-semibold" id="header-user-name">User Name</span>
+            <span class="font-label-sm text-[11px] text-primary font-bold uppercase tracking-wider" id="header-user-role">Role</span>
+          </div>
+          <button
+            class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors"
+            data-icon="notifications"
+          >
+            notifications
+          </button>
+          <img
+            id="header-user-avatar"
+            alt="User profile"
+            class="w-8 h-8 rounded-full border border-outline-variant object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2-sF_Qd9jEF33fUrS3vMvdoA8rbw2_a6jzv7r_6oDikCkrertidHwLgqAtWuKvLnRx7Lcsi79ZYj4FBaL_pETFxeyeF27_PhXy-KnuioiYgCwYTKcWDEuZoRksSf8Jb0_ZmsxJkpTFGZ2bW8aTl5fhcA4DOHQQal_vu1KVBcizoM56dHRc7Ce_vkUul2aL96DSeDmqR4YdfGUuoIQkUF_F8AX45U05tmCFg7YyPH6xtgAx7e31u5_5e2rQxm_tgBEgnhV-LsqsEDH"
+          />
+        </div>
+      </header>
+      <!-- Content Area -->
+      <div class="flex-1 overflow-y-auto p-gutter custom-scrollbar bg-background">
+        <div class="max-w-6xl mx-auto space-y-lg">
+          <!-- Page Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md border-b border-outline-variant pb-md">
+            <div>
+              <h2 class="font-headline-md text-headline-md font-bold text-on-background">User Administration</h2>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Create, read, update, patch, and delete user profiles and security roles.</p>
+            </div>
+            <button
+              id="create-user-btn"
+              class="bg-primary text-on-primary py-2.5 px-md rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 shadow-sm hover:bg-primary-container transition-colors active:scale-[0.98]"
+            >
+              <span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+              Add New User
+            </button>
+          </div>
+
+          <!-- Users Table Container -->
+          <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-surface-container-low border-b border-outline-variant text-label-sm text-on-surface font-semibold">
+                    <th class="p-4 pl-6">User Details</th>
+                    <th class="p-4">Email Address</th>
+                    <th class="p-4">Security Role</th>
+                    <th class="p-4 text-right pr-6">Action Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body" class="divide-y divide-outline-variant/60">
+                  <!-- Dynamic User Rows -->
+                </tbody>
+              </table>
+            </div>
+            <div id="no-users-message" class="hidden p-8 text-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-[48px] text-outline mb-2">person_search</span>
+              <p class="font-body-md text-body-md">No users match your search criteria.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal for Create / Edit User -->
+    <div id="user-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-md shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center px-6 py-4 border-b border-outline-variant bg-surface-container-low">
+          <h3 id="modal-title" class="font-headline-md text-title-sm text-on-surface font-semibold">Create New User</h3>
+          <button id="modal-close-btn" class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container p-1 rounded-full transition-colors">close</button>
+        </div>
+        <!-- Modal Body -->
+        <form id="user-form" class="flex-1 overflow-y-auto p-6 space-y-4">
+          <input type="hidden" id="user-id">
+          <!-- Name -->
+          <div class="space-y-1">
+            <label for="user-name-input" class="block font-label-md text-label-sm text-on-surface font-medium">Full Name</label>
+            <input type="text" id="user-name-input" required class="w-full px-4 py-2.5 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="e.g. John Doe">
+          </div>
+          <!-- Email -->
+          <div class="space-y-1">
+            <label for="user-email-input" class="block font-label-md text-label-sm text-on-surface font-medium">Email Address</label>
+            <input type="email" id="user-email-input" required class="w-full px-4 py-2.5 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="e.g. john@company.com">
+          </div>
+          <!-- Password -->
+          <div class="space-y-1">
+            <label for="user-password-input" class="block font-label-md text-label-sm text-on-surface font-medium" id="password-label">Password</label>
+            <input type="password" id="user-password-input" required class="w-full px-4 py-2.5 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="••••••••">
+            <p id="password-hint" class="text-[11px] text-on-surface-variant hidden mt-1">Leave blank to keep existing password (Patch/Update update details only)</p>
+          </div>
+          <!-- Role -->
+          <div class="space-y-1">
+            <label for="user-role-select" class="block font-label-md text-label-sm text-on-surface font-medium">Security Role</label>
+            <select id="user-role-select" class="w-full px-4 py-2.5 border border-outline-variant rounded-lg bg-white font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+              <option value="coder">Coder</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <!-- Actions -->
+          <div class="flex items-center justify-end gap-2 pt-4 border-t border-outline-variant">
+            <button type="button" id="modal-cancel-btn" class="border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-sm py-2 px-4 rounded-lg transition-colors">Cancel</button>
+            <button type="submit" id="modal-save-btn" class="bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-sm py-2 px-4 rounded-lg transition-colors">Save User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        // 1. Session check & headers
+        const loggedUser = JSON.parse(localStorage.getItem('user'));
+        if (!loggedUser) {
+          window.navigateTo('/login');
+          return;
+        }
+
+        // Only admins are allowed here
+        if (loggedUser.role !== 'admin') {
+          window.navigateTo('/board');
+          return;
+        }
+
+        document.getElementById('header-user-name').innerText = loggedUser.name;
+        document.getElementById('header-user-role').innerText = loggedUser.role;
+
+        // Logout handler
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          localStorage.removeItem('user');
+          window.navigateTo('/login');
+        });
+
+        // 2. State Variables
+        let allUsers = [];
+        let searchQuery = "";
+
+        async function initAdminConsole() {
+          await fetchUsers();
+          setupEventListeners();
+        }
+
+        // Fetch users from API server
+        async function fetchUsers() {
+          try {
+            const res = await fetch('http://localhost:3000/users');
+            if (res.ok) {
+              allUsers = await res.json();
+              renderUsers();
+            } else {
+              console.error("Failed to load users from API server");
+            }
+          } catch (e) {
+            console.error("Error connecting to users backend:", e);
+          }
+        }
+
+        // Render user management table
+        function renderUsers() {
+          const tbody = document.getElementById('users-table-body');
+          const noUsers = document.getElementById('no-users-message');
+          tbody.innerHTML = '';
+
+          // Filter users based on query
+          const filtered = allUsers.filter(u => {
+            if (!searchQuery) return true;
+            const query = searchQuery.toLowerCase();
+            return (u.name || '').toLowerCase().includes(query) || (u.email || '').toLowerCase().includes(query);
+          });
+
+          if (filtered.length === 0) {
+            noUsers.classList.remove('hidden');
+          } else {
+            noUsers.classList.add('hidden');
+          }
+
+          filtered.forEach(user => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-surface-container-lowest/50 transition-colors duration-150";
+
+            const initials = (user.name || 'U').split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            // Highlight current user
+            const isMe = String(user.id) === String(loggedUser.id);
+            const detailLabel = isMe ? `<span class="bg-primary/10 text-primary text-[10px] font-bold px-1.5 py-0.5 rounded ml-2">You</span>` : '';
+
+            // Color badge for role
+            const roleBadgeClass = user.role === 'admin' 
+              ? 'bg-primary-fixed text-on-primary-fixed-variant' 
+              : 'bg-secondary-container text-on-secondary-container';
+
+            // HTML details
+            tr.innerHTML = `
+              <td class="p-4 pl-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed-variant flex items-center justify-center font-bold text-[14px] shadow-sm shrink-0">
+                  ${initials}
+                </div>
+                <div>
+                  <span class="block font-label-md text-label-md text-on-surface font-semibold flex items-center">
+                    ${escapeHTML(user.name)} ${detailLabel}
+                  </span>
+                  <span class="block font-body-sm text-[12px] text-on-surface-variant">${user.role === 'admin' ? 'Administrator' : 'Developer'}</span>
+                </div>
+              </td>
+              <td class="p-4 font-body-md text-body-md text-on-surface">${escapeHTML(user.email)}</td>
+              <td class="p-4">
+                <span class="${roleBadgeClass} px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold capitalize">${user.role}</span>
+              </td>
+              <td class="p-4 text-right pr-6 space-x-1">
+                <!-- Quick Patch Toggle Role (Disabled for current user to prevent self-demotion) -->
+                <button 
+                  class="action-btn hover:bg-surface-container-high text-primary hover:text-primary-container p-2 rounded-full transition-all inline-flex items-center" 
+                  title="Toggle Role (Patch)"
+                  ${isMe ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}
+                  data-toggle-role="${user.id}"
+                >
+                  <span class="material-symbols-outlined text-[20px]">shield_with_house</span>
+                </button>
+                <!-- Edit Details (PUT / PATCH) -->
+                <button 
+                  class="action-btn hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface p-2 rounded-full transition-all inline-flex items-center" 
+                  title="Edit User Details"
+                  data-edit-user="${user.id}"
+                >
+                  <span class="material-symbols-outlined text-[20px]">edit</span>
+                </button>
+                <!-- Delete (DELETE) -->
+                <button 
+                  class="action-btn hover:bg-red-50 text-error hover:text-red-700 p-2 rounded-full transition-all inline-flex items-center" 
+                  title="Delete User"
+                  ${isMe ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}
+                  data-delete-user="${user.id}"
+                >
+                  <span class="material-symbols-outlined text-[20px]">delete</span>
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+
+        // Helper to escape HTML characters
+        function escapeHTML(str) {
+          if (!str) return '';
+          return str.replace(/[&<>'"]/g, 
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+          );
+        }
+
+        // 3. Modals and Forms
+        const modal = document.getElementById('user-modal');
+        const form = document.getElementById('user-form');
+        const modalTitle = document.getElementById('modal-title');
+        const userIdInput = document.getElementById('user-id');
+        const nameInput = document.getElementById('user-name-input');
+        const emailInput = document.getElementById('user-email-input');
+        const passwordInput = document.getElementById('user-password-input');
+        const passwordLabel = document.getElementById('password-label');
+        const passwordHint = document.getElementById('password-hint');
+        const roleSelect = document.getElementById('user-role-select');
+
+        function openModal(user = null) {
+          form.reset();
+          modal.classList.remove('hidden');
+
+          if (user) {
+            // EDIT MODE
+            modalTitle.innerText = "Edit User Details";
+            userIdInput.value = user.id;
+            nameInput.value = user.name;
+            emailInput.value = user.email;
+            passwordInput.value = "";
+            passwordInput.required = false; // Optional in edit mode
+            passwordHint.classList.remove('hidden');
+            roleSelect.value = user.role;
+            
+            // Prevent changing own role in dropdown
+            if (String(user.id) === String(loggedUser.id)) {
+              roleSelect.disabled = true;
+            } else {
+              roleSelect.disabled = false;
+            }
+          } else {
+            // CREATE MODE
+            modalTitle.innerText = "Create New User";
+            userIdInput.value = "";
+            passwordInput.required = true; // Required for new user
+            passwordHint.classList.add('hidden');
+            roleSelect.disabled = false;
+            roleSelect.value = "coder";
+          }
+        }
+
+        function closeModal() {
+          modal.classList.add('hidden');
+        }
+
+        // Setup DOM event listeners
+        function setupEventListeners() {
+          // Open Modal: Add User buttons
+          document.getElementById('create-user-btn').addEventListener('click', () => openModal(null));
+          document.getElementById('create-user-sidebar-btn').addEventListener('click', () => openModal(null));
+          
+          // Close Modals
+          document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+          document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+          });
+
+          // Search Event Listener
+          document.getElementById('search-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderUsers();
+          });
+
+          // Table clicks (delegation for Edit, Toggle Role, and Delete actions)
+          document.getElementById('users-table-body').addEventListener('click', async (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            // Handle edit user
+            if (btn.hasAttribute('data-edit-user')) {
+              const id = btn.getAttribute('data-edit-user');
+              const user = allUsers.find(u => String(u.id) === String(id));
+              if (user) openModal(user);
+            }
+
+            // Handle toggle role (PATCH operation)
+            if (btn.hasAttribute('data-toggle-role')) {
+              const id = btn.getAttribute('data-toggle-role');
+              const user = allUsers.find(u => String(u.id) === String(id));
+              if (user) {
+                const newRole = user.role === 'admin' ? 'coder' : 'admin';
+                if (confirm(`Are you sure you want to change ${user.name}'s role to ${newRole}?`)) {
+                  try {
+                    const res = await fetch(`http://localhost:3000/users/${id}`, {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ role: newRole })
+                    });
+                    if (res.ok) {
+                      user.role = newRole;
+                      renderUsers();
+                    } else {
+                      alert("Failed to patch user role on server.");
+                    }
+                  } catch (err) {
+                    console.error("Error patching user role:", err);
+                    alert("Network error. Could not connect to API server.");
+                  }
+                }
+              }
+            }
+
+            // Handle delete user (DELETE operation)
+            if (btn.hasAttribute('data-delete-user')) {
+              const id = btn.getAttribute('data-delete-user');
+              const user = allUsers.find(u => String(u.id) === String(id));
+              if (user) {
+                if (confirm(`Are you sure you want to permanently delete the user account for ${user.name}? This action cannot be undone.`)) {
+                  try {
+                    const res = await fetch(`http://localhost:3000/users/${id}`, {
+                      method: 'DELETE'
+                    });
+                    if (res.ok) {
+                      allUsers = allUsers.filter(u => String(u.id) !== String(id));
+                      renderUsers();
+                    } else {
+                      alert("Failed to delete user on server.");
+                    }
+                  } catch (err) {
+                    console.error("Error deleting user:", err);
+                    alert("Network error. Could not connect to API server.");
+                  }
+                }
+              }
+            }
+          });
+
+          // Handle form submit (Create or Edit/Patch user)
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = userIdInput.value;
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const role = roleSelect.value;
+
+            // Form data preparation
+            const userData = { name, email, role };
+            if (password) {
+              userData.password = password;
+            }
+
+            try {
+              let url = 'http://localhost:3000/users';
+              let method = 'POST';
+
+              if (id) {
+                // Edit mode
+                url = `http://localhost:3000/users/${id}`;
+                method = 'PATCH';
+              } else {
+                // Generate next numeric ID for JSON server (standard best practice to avoid string hashes from json-server v1)
+                const ids = allUsers.map(u => parseInt(u.id, 10)).filter(Number.isInteger);
+                const nextId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
+                userData.id = String(nextId);
+              }
+
+              const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+              });
+
+              if (res.ok) {
+                closeModal();
+                await fetchUsers();
+                // If current logged-in user edited themselves, update localStorage
+                if (id && String(id) === String(loggedUser.id)) {
+                  const updatedUser = await res.json();
+                  localStorage.setItem('user', JSON.stringify(updatedUser));
+                  document.getElementById('header-user-name').innerText = updatedUser.name;
+                }
+              } else {
+                alert("Failed to save user.");
+              }
+            } catch (err) {
+              console.error("Error saving user details:", err);
+              alert("Network error. Could not connect to API server.");
+            }
+          });
+        }
+
+        // Initialize admin module
+        initAdminConsole();
+      })();
+    </script>
+  </body>
+</html>
