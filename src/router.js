@@ -25,6 +25,28 @@ async function loadPage(path) {
     localStorage.removeItem('user');
   }
 
+  // Sync user session with the backend database to fetch latest updates (name, role, password, etc.)
+  if (user && user.id) {
+    try {
+      const response = await fetch(`http://localhost:3000/users/${user.id}`);
+      if (response.ok) {
+        const freshUser = await response.json();
+        if (freshUser) {
+          localStorage.setItem('user', JSON.stringify(freshUser));
+          user = freshUser;
+        } else {
+          localStorage.removeItem('user');
+          user = null;
+        }
+      } else if (response.status === 404) {
+        localStorage.removeItem('user');
+        user = null;
+      }
+    } catch (e) {
+      console.warn('Could not sync user session with backend:', e);
+    }
+  }
+
   // Route Guards:
   // If not logged in and target is a protected route (like /board or /admin), redirect to login
   if (!user && (targetPath === '/board' || targetPath === '/admin')) {

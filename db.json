@@ -8,18 +8,11 @@
       "role": "admin"
     },
     {
-      "id": "2",
-      "name": "Luis Guerrero",
-      "email": "luiscoder@riwi.com",
-      "password": "0908",
-      "role": "admin"
-    },
-    {
-      "name": "janner",
-      "email": "janner12@riwi.com",
+      "name": "Juansito",
+      "email": "juansito1712@gmail.com",
       "role": "coder",
-      "password": "0908",
-      "id": "admin"
+      "password": "0908070",
+      "id": "YXcsSdJ1h-8"
     }
   ],
   "tasks": [
@@ -28,14 +21,14 @@
       "title": "User Flow Mapping",
       "description": "Define the end-to-end journey for the new onboarding experience.",
       "status": "done",
-      "userId": "2"
+      "userId": null
     },
     {
       "id": "2",
       "title": "API Documentation",
       "description": "dd",
       "status": "in progress",
-      "userId": "2"
+      "userId": null
     },
     {
       "id": "3",
@@ -49,19 +42,19 @@
       "title": "Workspace Setup",
       "description": "Configured the new Riwiflow cloud environment for the dev team.",
       "status": "todo",
-      "userId": "2"
+      "userId": null
     },
     {
       "title": "Prueba 1",
       "description": "asdasd",
-      "status": "in progress",
-      "userId": "1",
+      "status": "in review",
+      "userId": "YXcsSdJ1h-8",
       "id": "FbUTo-YUZmA"
     },
     {
       "title": "lmaooo",
       "description": "asdasda",
-      "status": "in progress",
+      "status": "done",
       "userId": "1",
       "id": "YNt7BjPBLNs"
     }

@@ -159,15 +159,19 @@
           if (existingError) existingError.remove();
 
           try {
-            const response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+            // Fetch users by email only, to bypass json-server v1 ignoring password query parameter filtering
+            const response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}`);
             if (!response.ok) {
               throw new Error("Server error, could not authenticate.");
             }
             const users = await response.json();
             
-            if (users && users.length > 0) {
+            // Check password on the client side
+            const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+            
+            if (user && String(user.password) === password) {
               // Store user session
-              localStorage.setItem('user', JSON.stringify(users[0]));
+              localStorage.setItem('user', JSON.stringify(user));
               // Redirect to board
               window.navigateTo("/board");
             } else {
