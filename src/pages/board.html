@@ -373,7 +373,7 @@
             if (res.ok) {
               allUsers = await res.json();
               const select = document.getElementById('task-user-select');
-              select.innerHTML = allUsers.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join('');
+              select.innerHTML = '<option value="">Unassigned</option>' + allUsers.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join('');
             }
           } catch (e) {
             console.error("Error fetching users:", e);
@@ -539,7 +539,7 @@
             titleInput.value = task.title;
             descInput.value = task.description;
             statusSelect.value = task.status || 'todo';
-            userSelect.value = task.userId;
+            userSelect.value = task.userId || "";
 
             // Apply Role Rules
             if (loggedUser.role === 'admin') {
@@ -676,7 +676,7 @@
               title: titleInput.value.trim(),
               description: descInput.value.trim(),
               status: statusSelect.value,
-              userId: userSelect.value
+              userId: userSelect.value ? userSelect.value : null
             };
 
             try {
@@ -720,6 +720,13 @@
           deleteBtn.addEventListener('click', async () => {
             const taskId = taskIdInput.value;
             if (!taskId) return;
+
+            // Prevent deletion of tasks assigned to any user
+            const task = allTasks.find(t => String(t.id) === String(taskId));
+            if (task && task.userId !== null && task.userId !== undefined && task.userId !== "") {
+              alert("You cannot delete this task because it is currently assigned to a user. Please unassign it first (set 'Assign To' to 'Unassigned' and save) before deleting.");
+              return;
+            }
 
             if (confirm("Are you sure you want to delete this task?")) {
               try {

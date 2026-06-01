@@ -13,6 +13,13 @@
       "role": "coder",
       "password": "0908070",
       "id": "YXcsSdJ1h-8"
+    },
+    {
+      "name": "Juancamilo",
+      "email": "juancamilo912@gmail.com",
+      "role": "coder",
+      "password": "912345",
+      "id": "TCbakU2QA_4"
     }
   ],
   "tasks": [
@@ -27,36 +34,29 @@
       "id": "2",
       "title": "API Documentation",
       "description": "dd",
-      "status": "in progress",
-      "userId": null
-    },
-    {
-      "id": "3",
-      "title": "Pricing Tier Update",
-      "description": "Final sign-off required for the Enterprise plan structural changes.",
       "status": "in review",
-      "userId": "1"
-    },
-    {
-      "id": "4",
-      "title": "Workspace Setup",
-      "description": "Configured the new Riwiflow cloud environment for the dev team.",
-      "status": "todo",
       "userId": null
-    },
-    {
-      "title": "Prueba 1",
-      "description": "asdasd",
-      "status": "in review",
-      "userId": "YXcsSdJ1h-8",
-      "id": "FbUTo-YUZmA"
     },
     {
       "title": "lmaooo",
       "description": "asdasda",
-      "status": "done",
+      "status": "in progress",
       "userId": "1",
       "id": "YNt7BjPBLNs"
+    },
+    {
+      "title": "lmaooo",
+      "description": "dasdasd",
+      "status": "todo",
+      "userId": "1",
+      "id": "HkYUZbv38zM"
+    },
+    {
+      "title": "123424",
+      "description": "binchiling",
+      "status": "in progress",
+      "userId": null,
+      "id": "bSnSayHxF30"
     }
   ],
   "logs": [],

@@ -8,6 +8,14 @@ const routes = {
   '/admin': '/src/pages/admin.html'
 };
 
+const routeTitles = {
+  '/': 'Login | Riwiflow',
+  '/index.html': 'Login | Riwiflow',
+  '/login': 'Login | Riwiflow',
+  '/board': 'Kanban Board | Riwiflow',
+  '/admin': 'Admin Dashboard | Riwiflow'
+};
+
 async function loadPage(path) {
   // Normalize path
   let targetPath = path;
@@ -65,6 +73,7 @@ async function loadPage(path) {
   }
 
   const pageUrl = routes[targetPath] || routes['/'];
+  document.title = routeTitles[targetPath] || 'Riwiflow';
   
   try {
     const response = await fetch(pageUrl);
